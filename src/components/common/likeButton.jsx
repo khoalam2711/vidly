@@ -4,19 +4,31 @@ class LikeButton extends Component {
         return (
             <React.Fragment>
                 {this.props.isLiked == 1 ? (
-                    <button
-                        className='btn btn-secondary sm'
+                    // <button
+                    //     className='btn btn-secondary sm'
+                    //     onClick={this.props.onUnlike}
+                    // >
+                    //     Unlike
+                    // </button>
+                    <i
+                        class='fa fa-heart-o'
+                        aria-hidden='true'
                         onClick={this.props.onUnlike}
-                    >
-                        Unlike
-                    </button>
+                        style={{ cursor: 'pointer' }}
+                    ></i>
                 ) : (
-                    <button
-                        className='btn btn-primary sm'
+                    // <button
+                    //     className='btn btn-primary sm'
+                    //     onClick={this.props.onLike}
+                    // >
+                    //     Like
+                    // </button>
+                    <i
+                        class='fa fa-heart'
+                        aria-hidden='true'
+                        style={{ cursor: 'pointer' }}
                         onClick={this.props.onLike}
-                    >
-                        Like
-                    </button>
+                    ></i>
                 )}
             </React.Fragment>
         );

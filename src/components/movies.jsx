@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import reactDom from 'react-dom';
 import { getMovies } from '../services/fakeMovieService';
 import LikeButton from './common/likeButton';
+import Pagination from './common/Pagination';
 class Movies extends Component {
     state = {
         movies: getMovies(),
@@ -83,6 +84,7 @@ class Movies extends Component {
         movies[index] = likedMovie;
         this.setState({ movies });
     };
+
     render() {
         if (this.state.movies.length === 0)
             return <p>There are no movies in the DB!</p>;
@@ -129,6 +131,7 @@ class Movies extends Component {
                         ))}
                     </tbody>
                 </table>
+				<Pagination totalItems = {this.state.movies.length} pageSize = {10}></Pagination>
             </div>
         );
     }

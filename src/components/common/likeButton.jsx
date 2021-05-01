@@ -11,7 +11,7 @@ class LikeButton extends Component {
                     //     Unlike
                     // </button>
                     <i
-                        class='fa fa-heart-o'
+                        className='fa fa-heart-o'
                         aria-hidden='true'
                         onClick={this.props.onUnlike}
                         style={{ cursor: 'pointer' }}
@@ -24,7 +24,7 @@ class LikeButton extends Component {
                     //     Like
                     // </button>
                     <i
-                        class='fa fa-heart'
+                        className='fa fa-heart'
                         aria-hidden='true'
                         style={{ cursor: 'pointer' }}
                         onClick={this.props.onLike}

@@ -3,7 +3,7 @@ class LikeButton extends Component {
     render() {
         return (
             <React.Fragment>
-                {this.props.isLiked == 1 ? (
+                {this.props.isLiked === 1 ? (
                     // <button
                     //     className='btn btn-secondary sm'
                     //     onClick={this.props.onUnlike}

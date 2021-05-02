@@ -3,9 +3,12 @@ import reactDom from 'react-dom';
 import { getMovies } from '../services/fakeMovieService';
 import LikeButton from './common/likeButton';
 import Pagination from './common/Pagination';
+import { paginate } from './utils/paginate';
 class Movies extends Component {
     state = {
         movies: getMovies(),
+        pageSize: 4,
+        currentPage: 1,
     };
     renderMovie = (movie) => {
         let {
@@ -85,9 +88,18 @@ class Movies extends Component {
         this.setState({ movies });
     };
 
+    handlePageChange = (page) => {
+        this.setState({ currentPage: page });
+    };
+
     render() {
         if (this.state.movies.length === 0)
             return <p>There are no movies in the DB!</p>;
+        const movies = paginate(
+            this.state.movies,
+            this.state.currentPage,
+            this.state.pageSize
+        );
         return (
             <div>
                 <p>Showing {this.state.movies.length} movies in the DB</p>
@@ -103,7 +115,7 @@ class Movies extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.movies.map((movie) => (
+                        {movies.map((movie) => (
                             <tr key={movie._id}>
                                 <td>{movie.title}</td>
                                 <td>{movie.genre.name}</td>
@@ -131,7 +143,12 @@ class Movies extends Component {
                         ))}
                     </tbody>
                 </table>
-				<Pagination totalItems = {this.state.movies.length} pageSize = {10}></Pagination>
+                <Pagination
+                    totalItems={this.state.movies.length}
+                    pageSize={this.state.pageSize}
+                    onPageChange={this.handlePageChange}
+                    currentPage={this.state.currentPage}
+                ></Pagination>
             </div>
         );
     }

@@ -8,7 +8,6 @@ class Pagination extends Component {
     render() {
         const { totalItems, pageSize, onPageChange, currentPage } = this.props;
         const totalPages = totalItems / pageSize;
-		console.log(totalItems);
         if (totalPages <= 1) return null;
         const pages = _.range(1, totalPages + 1);
 
@@ -26,6 +25,7 @@ class Pagination extends Component {
                                         ? 'page-item active'
                                         : 'page-item'
                                 }
+                                key={page}
                             >
                                 <a
                                     className='page-link'

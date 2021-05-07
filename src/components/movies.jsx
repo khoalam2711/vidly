@@ -149,7 +149,7 @@ class Movies extends Component {
                         onUnlike={this.handleUnlike}
                         onDelete={this.handleDelete}
                         onSort={this.handleSort}
-                        // sortColumn={this.state.sortColumn}
+                        sortColumn={this.state.sortColumn}
                     />
                     <Pagination
                         totalItems={sorted.length}

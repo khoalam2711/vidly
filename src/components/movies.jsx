@@ -141,6 +141,8 @@ class Movies extends Component {
         );
         return { totalCount: filtered.length, data };
     };
+
+	
     render() {
         if (this.state.movies.length === 0)
             return <p>There are no movies in the DB!</p>;

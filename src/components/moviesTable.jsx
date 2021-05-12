@@ -31,7 +31,17 @@ class MoviesTable extends Component {
             ),
         },
     ];
-    /*     raiseSort = (path) => {
+    render() {
+        const { movies, onLike, onUnlike, onSort, sortColumn } = this.props;
+        return (
+            <Table
+                columns={this.columns}
+                sortColumn={sortColumn}
+                onSort={onSort}
+                data={movies}
+            />
+        );
+        /*     raiseSort = (path) => {
         const sortColumn = { ...this.props.sortColumn };
         console.log(this.props.sortColumn);
         console.log(sortColumn);
@@ -45,11 +55,6 @@ class MoviesTable extends Component {
         this.props.onSort(sortColumn);
     }; */
 
-    render() {
-        const { movies, onLike, onUnlike, onSort, sortColumn } = this.props;
-        return (
-			<Table columns = {this.columns} sortColumn = {sortColumn} onSort = {onSort} data = {movies}/>
-        );
         {
             /* <thead>
                     <tr>

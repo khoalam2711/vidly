@@ -18,7 +18,21 @@ class NavBar extends Component {
                         <NavLink className='nav-item nav-link' to='/rentals'>
                             Rentals
                         </NavLink>
+                        <NavLink
+                            className='nav-item nav-link'
+                            to='/registerForm'
+                        >
+                            Register
+                        </NavLink>
                     </ul>
+                    <NavLink className='nav-item nav-link' to='/login'>
+                        <button
+                            className='btn btn-outline-success'
+                            type='submit'
+                        >
+                            Login
+                        </button>
+                    </NavLink>
                 </div>
             </nav>
         );

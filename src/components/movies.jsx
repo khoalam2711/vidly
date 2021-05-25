@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import reactDom from 'react-dom';
+import { Link } from 'react-router-dom';
 import { getMovies } from '../services/fakeMovieService';
 import { getGenres } from '../services/fakeGenreService';
 import Pagination from './common/Pagination';
 import { paginate } from './utils/paginate';
 import ListGroup from './common/ListGroup';
 import MoviesTable from './moviesTable';
+import SearchBox from './common/searchBox';
 import _ from 'lodash';
 class Movies extends Component {
     state = {
@@ -15,6 +17,7 @@ class Movies extends Component {
         genres: [],
         selectedGenre: null,
         sortColumn: { path: 'title', order: 'desc' },
+        searchQuery: '',
     };
     // renderMovie = (movie) => {
     //     let {
@@ -106,7 +109,8 @@ class Movies extends Component {
 
     handleGenreSelect = (item) => {
         const selectedGenre = item;
-        this.setState({ selectedGenre, currentPage: 1 });
+        const searchQuery = '';
+        this.setState({ selectedGenre, currentPage: 1, searchQuery });
     };
 
     handleSort = (sortColumn) => {
@@ -120,14 +124,19 @@ class Movies extends Component {
             sortColumn,
             currentPage,
             pageSize,
+            searchQuery,
         } = this.state;
-        const filtered =
-            selectedGenre && selectedGenre._id
-                ? movies.filter(
-                      (m) => m.genre._id === selectedGenre._id
-                  )
-                : movies;
-
+        let filtered = {};
+        if (!searchQuery) {
+            filtered =
+                selectedGenre && selectedGenre._id
+                    ? movies.filter((m) => m.genre._id === selectedGenre._id)
+                    : movies;
+        } else {
+            filtered = movies.filter((m) =>
+                m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+            );
+        }
         const sorted = _.orderBy(
             filtered,
             [sortColumn.path],
@@ -142,11 +151,16 @@ class Movies extends Component {
         return { totalCount: filtered.length, data };
     };
 
-	
+    handleSearch = ({ currentTarget: input }) => {
+        const searchQuery = input.value;
+        this.setState({ searchQuery, selectedGenre: null, currentPage: 1 });
+    };
+
     render() {
         if (this.state.movies.length === 0)
             return <p>There are no movies in the DB!</p>;
         const { data: movies, totalCount } = this.getPagedData();
+        const { searchQuery } = this.state;
         return (
             <div className='row'>
                 <div className='col-2'>
@@ -157,6 +171,15 @@ class Movies extends Component {
                     ></ListGroup>
                 </div>
                 <div className='col'>
+                    <Link to='/movies/new'>
+                        <button className='btn btn-primary mb-3'>
+                            New Movie
+                        </button>
+                    </Link>
+                    <SearchBox
+                        searchQuery={searchQuery}
+                        onSearch={this.handleSearch}
+                    />
                     <p>Showing {totalCount} movies in the DB</p>
                     <MoviesTable
                         movies={movies}

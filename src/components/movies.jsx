@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import reactDom from 'react-dom';
-import { Link } from 'react-router-dom';
-import { getMovies } from '../services/fakeMovieService';
-import { getGenres } from '../services/fakeGenreService';
-import Pagination from './common/Pagination';
-import { paginate } from './utils/paginate';
-import ListGroup from './common/ListGroup';
-import MoviesTable from './moviesTable';
-import SearchBox from './common/searchBox';
 import _ from 'lodash';
+import { Link } from 'react-router-dom';
+import Pagination from './common/Pagination';
+import ListGroup from './common/ListGroup';
+import SearchBox from './common/searchBox';
+import { paginate } from './utils/paginate';
+import MoviesTable from './moviesTable';
+import { getGenres } from '../services/genreService';
+import { getMovies, deleteMovie } from '../services/movieService';
+import { toast } from 'react-toastify';
 class Movies extends Component {
     state = {
         movies: [],
@@ -19,69 +19,28 @@ class Movies extends Component {
         sortColumn: { path: 'title', order: 'desc' },
         searchQuery: '',
     };
-    // renderMovie = (movie) => {
-    //     let {
-    //         title,
-    //         genre: { name },
-    //         numberInStock,
-    //         dailyRentalRate,
-    //     } = movie;
-    //     return (
-    //         <tr>
-    //             <td>{title}</td>
-    //             <td>{name}</td>
-    //             <td>{numberInStock}</td>
-    //             <td>{dailyRentalRate}</td>
-    //         </tr>
-    //     );
-    // };
 
-    // renderMovies = () => {
-    //     // let {
-    //     //     title,
-    //     //     genre: { name },
-    //     //     numberInStock,
-    //     //     dailyRentalRate,
-    //     // } = this.state.movies.map();
-    //     let result = this.state.movies.map((movie) => {
-    //         let {
-    //             title,
-    //             genre: { name },
-    //             numberInStock,
-    //             dailyRentalRate,
-    //         } = movie;
-    //         return (
-    //             <tr key={movie._id}>
-    //                 <td>{title}</td>
-    //                 <td>{name}</td>
-    //                 <td>{numberInStock}</td>
-    //                 <td>{dailyRentalRate}</td>
-    //                 <td>
-    //                     <button
-    //                         onClick={(movie) => this.handleDelete(movie)}
-    //                         type="button"
-    //                         className="btn btn-outline-danger"
-    //                     >
-    //                         Delete
-    //                     </button>
-    //                 </td>
-    //             </tr>
-    //         );
-    //     });
-    //     return result;
-    // };
+    async componentDidMount() {
+        const { data: dbGenres } = await getGenres();
+        const genres = [{ _id: '', name: 'All genres' }, ...dbGenres];
+        const { data: movies } = await getMovies();
 
-    componentDidMount() {
-        const genres = [{ _id: '', name: 'All genres' }, ...getGenres()];
-
-        this.setState({ movies: getMovies(), genres });
+        this.setState({ movies, genres });
     }
 
-    handleDelete = (movie) => {
-        //console.log(movie);
+    handleDelete = async (movie) => {
+        const originalMovies = this.state.movies;
         let movies = this.state.movies.filter((m) => m._id !== movie._id);
-        let remainingMovies = movies.length;
-        this.setState({ movies, remainingMovies });
+        this.setState({ movies });
+        try {
+            await deleteMovie(movie._id);
+        } catch (ex) {
+            if (ex.response && ex.response.status === 404)
+                toast.error('This movie has already been deleted');
+            console.log(originalMovies);
+            this.setState({ movies: originalMovies });
+        }
+
         // this.state.movies.
     };
 

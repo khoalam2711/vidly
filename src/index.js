@@ -7,6 +7,10 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 import Movies from './components/movies';
 import { BrowserRouter } from 'react-router-dom';
+import logService from './services/logService';
+
+logService.init();
+
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>

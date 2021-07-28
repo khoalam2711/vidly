@@ -14,7 +14,6 @@ class Pagination extends Component {
 			<nav>
 				<ul className='pagination'>
 					{pages.map((page) => {
-						console.log(page);
 						return (
 							<React.Fragment>
 								<li
@@ -23,13 +22,13 @@ class Pagination extends Component {
 									}
 									key={page.toString()}
 								>
-									<a
+									<span
 										className='page-link'
 										onClick={() => onPageChange(page)}
 										key={page.toString()}
 									>
 										{page}
-									</a>
+									</span>
 								</li>
 							</React.Fragment>
 						);

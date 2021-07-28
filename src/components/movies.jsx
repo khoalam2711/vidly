@@ -112,8 +112,6 @@ class Movies extends Component {
 	};
 
 	render() {
-		if (this.state.movies.length === 0)
-			return <p>There are no movies in the DB!</p>;
 		const { data: movies, totalCount } = this.getPagedData();
 		const { searchQuery } = this.state;
 		const { user } = this.props;

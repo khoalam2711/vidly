@@ -3,6 +3,7 @@ import Form from './Form';
 import Joi from 'joi-browser';
 import { registerUser } from '../../services/userService';
 import authService from '../../services/authService';
+import toast from 'react-toastify';
 class RegisterForm extends Form {
 	state = {
 		data: { username: '', password: '', name: '' },

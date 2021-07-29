@@ -32,4 +32,5 @@ export default {
 	logout,
 	getCurrentUser,
 	getJwt,
+	loginWithJwt,
 };

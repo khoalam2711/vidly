@@ -6,13 +6,10 @@ import React, { Component } from 'react';
 class ListGroup extends Component {
     render() {
         return (
-            <ul className='list-group ml-4'>
-                {/* <li className='list-group-item'>Crab</li>
-                <li className='list-group-item active'>Sponge</li>
-                <li className='list-group-item'>Starfish</li> */}
-                {/* <li className='list-group-item'>All genres</li> */}
+            <ul className='list-group'>
                 {this.props.items.map((i) => (
                     <li
+												role="button"
                         key={i[this.props.valueProperty]}
                         className={
                             i === this.props.selectedGroup

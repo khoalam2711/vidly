@@ -18,14 +18,19 @@ class Movies extends Component {
 		selectedGenre: null,
 		sortColumn: { path: 'title', order: 'desc' },
 		searchQuery: '',
+		isLoading: true,
 	};
 
 	async componentDidMount() {
-		const { data: dbGenres } = await getGenres();
+		const genresPromise = getGenres();
+		const moviesPromise = getMovies();
+		const [{ data: dbGenres }, { data: movies }] = await Promise.all([
+			genresPromise,
+			moviesPromise,
+		]);
 		const genres = [{ _id: '', name: 'All genres' }, ...dbGenres];
-		const { data: movies } = await getMovies();
 
-		this.setState({ movies, genres });
+		this.setState({ movies, genres, isLoading: false });
 	}
 
 	handleDelete = async (movie) => {
@@ -77,14 +82,7 @@ class Movies extends Component {
 	};
 
 	getPagedData = () => {
-		const {
-			selectedGenre,
-			movies,
-			sortColumn,
-			currentPage,
-			pageSize,
-			searchQuery,
-		} = this.state;
+		const { selectedGenre, movies, sortColumn, currentPage, pageSize, searchQuery } = this.state;
 		let filtered = {};
 		if (!searchQuery) {
 			filtered =
@@ -92,9 +90,7 @@ class Movies extends Component {
 					? movies.filter((m) => m.genre._id === selectedGenre._id)
 					: movies;
 		} else {
-			filtered = movies.filter((m) =>
-				m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
-			);
+			filtered = movies.filter((m) => m.title.toLowerCase().startsWith(searchQuery.toLowerCase()));
 		}
 		const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 		const data = paginate(
@@ -113,42 +109,60 @@ class Movies extends Component {
 
 	render() {
 		const { data: movies, totalCount } = this.getPagedData();
-		const { searchQuery } = this.state;
+		const { searchQuery, isLoading } = this.state;
 		const { user } = this.props;
 		return (
-			<div className='container'>
-				<div className='row'>
-					<div className='col-2'>
-						<ListGroup
-							items={this.state.genres}
-							onGroupSelect={this.handleGenreSelect}
-							selectedGroup={this.state.selectedGenre}
-						></ListGroup>
+			<div className="container">
+				{isLoading ? (
+					<div className="row d-flex flex-column align-items-center justify-content-center">
+						<div class="spinner-border text-primary mx-auto" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
+						<p>Loading... Please wait up to 1 minute.</p>
 					</div>
-					<div className='col'>
-						{user && (
-							<Link to='/movies/new'>
-								<button className='btn btn-primary mb-3'>New Movie</button>
-							</Link>
-						)}
-						<SearchBox searchQuery={searchQuery} onSearch={this.handleSearch} />
-						<p>Showing {totalCount} movies in the DB</p>
-						<MoviesTable
-							movies={movies}
-							onLike={this.handleLike}
-							onUnlike={this.handleUnlike}
-							onDelete={this.handleDelete}
-							onSort={this.handleSort}
-							sortColumn={this.state.sortColumn}
-						/>
-						<Pagination
-							totalItems={totalCount}
-							pageSize={this.state.pageSize}
-							onPageChange={this.handlePageChange}
-							currentPage={this.state.currentPage}
-						></Pagination>
+				) : (
+					<div className="row">
+						<div className="col-sm-12 col-md-3 col-xl-2 pl-md-4">
+							<ListGroup
+								items={this.state.genres}
+								onGroupSelect={this.handleGenreSelect}
+								selectedGroup={this.state.selectedGenre}
+							></ListGroup>
+						</div>
+						<div className="col mt-3 mt-md-0">
+							{user && (
+								<Link to="/movies/new">
+									<button className="btn btn-primary mb-3">New Movie</button>
+								</Link>
+							)}
+							<SearchBox searchQuery={searchQuery} onSearch={this.handleSearch} />
+							<p>Showing {totalCount} movies in the DB</p>
+							<MoviesTable
+								movies={movies}
+								onLike={this.handleLike}
+								onUnlike={this.handleUnlike}
+								onDelete={this.handleDelete}
+								onSort={this.handleSort}
+								sortColumn={this.state.sortColumn}
+							/>
+							<Pagination
+								totalItems={totalCount}
+								pageSize={this.state.pageSize}
+								onPageChange={this.handlePageChange}
+								currentPage={this.state.currentPage}
+							></Pagination>
+						</div>
 					</div>
-				</div>
+				)}
+
+				{user && !isLoading && (
+					<div className="row pl-md-4">
+						<small>
+							* Try out deletion feature with this account. Username: khoalam@gmail.com Password:
+							admin
+						</small>
+					</div>
+				)}
 			</div>
 		);
 	}

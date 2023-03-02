@@ -74,7 +74,7 @@ class MovieForm extends Form {
 		const { genres } = this.state;
 		return (
 			<div>
-				<div className='container'>
+				<div className='container w-75'>
 					<h1>Movie Form</h1>
 					<form onSubmit={this.handleSubmit}>
 						{this.renderInput('title', 'Title')}
